@@ -67,25 +67,36 @@ exports.readOne = (id, callback) => {
 };
 
 exports.update = (id, text, callback) => {
-  var item = items[id];
-  if (!item) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    items[id] = text;
-    callback(null, { id, text });
-  }
+  var pathId = path.join(exports.dataDir, id + '.txt');
+  console.log(pathId);
+
+  fs.access(pathId, error => {
+    if (error) {
+      callback(new Error('no'));
+    } else {
+     fs.writeFile(pathId, text, (err) => {
+       if (err) {
+         console.log('error writing file');
+       } else {
+         callback(null, text[text] = text);
+       }
+     })
+   }
+  })
+
 };
 
 exports.delete = (id, callback) => {
-  var item = items[id];
-  delete items[id];
-  if (!item) {
-    // report an error if item not found
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback();
-  }
+  var pathId = path.join(exports.dataDir, id + '.txt');
+  fs.unlink(pathId, (err) => {
+    if (err) {
+      callback(new Error('no'));
+    } else {
+      callback(null);
+    }
+  })
 };
+
 
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
 
